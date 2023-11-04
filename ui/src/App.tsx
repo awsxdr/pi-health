@@ -1,13 +1,15 @@
-import './App.css'
-import { HealthGraph } from './components'
-import { TickContextProvider } from './contexts'
+import './App.scss'
+import { ConnectionsContextProvider, TickContextProvider } from '@contexts'
+import { DashboardPage } from '@pages'
 
 function App() {
   return (
     <>
-      <TickContextProvider>
-        <HealthGraph />
-      </TickContextProvider>
+      <ConnectionsContextProvider>
+        <TickContextProvider>
+          <DashboardPage />
+        </TickContextProvider>
+      </ConnectionsContextProvider>
     </>
   )
 }

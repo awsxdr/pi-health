@@ -1,0 +1,44 @@
+$warning-color: #ffa;
+$danger-color: #fdd;
+$unknown-color: #fdf;
+$ok-color: #dfd;
+$default-background-color: #fff;
+
+$background-pattern-size: 10px;
+
+.connectionCardContainer {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.connectionCard {
+    text-align: center;
+    margin: 20px 0 0 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.cardButtons {
+    align-self: end;
+    margin: -18px;
+}
+
+.warning {
+    background-color: $warning-color !important;
+    background-image: repeating-linear-gradient( 45deg, $warning-color, $warning-color calc($background-pattern-size / 2), $default-background-color calc($background-pattern-size / 2), $default-background-color $background-pattern-size);
+}
+
+.danger {
+    background-color: #fdd !important;
+}
+
+.unknown {
+    background-color: #fdf !important;
+    background-image:  repeating-linear-gradient(45deg, #fdf 25%, transparent 25%, transparent 75%, #fdf 75%, #fdf), repeating-linear-gradient(45deg, #fdf 25%, #fff 25%, #fff 75%, #fdf 75%, #fdf);
+    background-position: 0 0, 10px 10px;
+    background-size: 20px 20px;
+}
+
+.ok {
+    background-color: #dfd !important;
+}

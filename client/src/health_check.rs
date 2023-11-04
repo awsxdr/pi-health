@@ -167,9 +167,9 @@ impl HealthCheck {
         match self.system_info.lock().await.memory() {
             Ok(memory) => {
                 HealthValue {
-                    state: if memory.free.as_u64() < 10 * 1024 * 1024 { 
+                    state: if memory.free.as_u64() < 256 * 1024 * 1024 { 
                             HealthState::Critical
-                        } else if memory.free.as_u64() < 100 * 1024 * 1024 {
+                        } else if memory.free.as_u64() < 512 * 1024 * 1024 {
                             HealthState::Unhealthy
                         } else {
                             HealthState::Ok

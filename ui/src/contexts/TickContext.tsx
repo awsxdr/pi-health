@@ -8,10 +8,11 @@ export const TickContextProvider = ({ children }: PropsWithChildren) => {
     const [tick, setTick] = useState(0);
 
     useEffect(() => {
-        console.log('Creating tick timer');
-        setInterval(() => {
+        const interval = setInterval(() => {
             setTick(current => current + 1);
         }, 1000);
+
+        return () => clearInterval(interval);
     }, [setTick]);
 
     return (
