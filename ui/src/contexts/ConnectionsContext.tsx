@@ -5,6 +5,8 @@ export type Connection = {
     displayName: string,
     serverAddress: string,
     healthPort: number,
+    cacheSize: number,
+    pollFrequencyInSeconds: number,
 };
 
 type ConnectionsContextProps = {
@@ -17,6 +19,8 @@ export const DEFAULT_CONNECTION: Connection = {
     displayName: '',
     serverAddress: '',
     healthPort: 8002,
+    cacheSize: 300,
+    pollFrequencyInSeconds: 1,
 };
 
 const DEFAULT_CONNECTIONS_CONTEXT_PROPS = {
@@ -52,15 +56,13 @@ export const ConnectionsContextProvider = ({ children }: PropsWithChildren) => {
 
     const addConnection = useMemo(() => (connection: Connection) => {
         updateConnections(current => 
-            current
-                .filter(c => c.displayName !== connection.displayName && c.serverAddress !== connection.serverAddress)
-                .concat(connection));
+            current.concat(connection));
     }, [setConnections]);
 
     const removeConnection = useMemo(() => (connection: Connection) => {
         updateConnections(current =>
             current
-                .filter(c => c.displayName !== connection.displayName && c.serverAddress !== connection.serverAddress))
+                .filter(c => c.displayName !== connection.displayName))
     }, [setConnections]);
 
     return (

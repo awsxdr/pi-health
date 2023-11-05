@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Button, Dialog, DialogBody, DialogFooter, FormGroup, InputGroup, NumericInput } from '@blueprintjs/core';
+import { Button, ControlGroup, Dialog, DialogBody, DialogFooter, FormGroup, InputGroup, Label, NumericInput } from '@blueprintjs/core';
 import { Connection, DEFAULT_CONNECTION } from '@contexts';
+import styles from './AddServerDialog.module.css';
 
 type AddServerDialogProps = {
     isOpen: boolean,
@@ -13,6 +14,8 @@ export const AddServerDialog = ({ isOpen, onAddServer, onClose }: AddServerDialo
     const [name, setName] = useState(DEFAULT_CONNECTION.displayName);
     const [serverAddress, setServerAddress] = useState(DEFAULT_CONNECTION.serverAddress);
     const [healthPort, setHealthPort] = useState(DEFAULT_CONNECTION.healthPort);
+    const [pollFrequency, setPollFrequency] = useState(DEFAULT_CONNECTION.pollFrequencyInSeconds);
+    const [cacheSize, setCacheSize] = useState(DEFAULT_CONNECTION.cacheSize);
 
     const resetValues = () => {
         setName(DEFAULT_CONNECTION.displayName);
@@ -30,6 +33,8 @@ export const AddServerDialog = ({ isOpen, onAddServer, onClose }: AddServerDialo
             displayName: name,
             serverAddress,
             healthPort,
+            pollFrequencyInSeconds: pollFrequency,
+            cacheSize,
         };
 
         resetValues();
@@ -52,14 +57,14 @@ export const AddServerDialog = ({ isOpen, onAddServer, onClose }: AddServerDialo
                     labelFor='display-name'
                     labelInfo='*'
                 >
-                    <InputGroup id='display-name' value={name} onValueChange={setName} />
+                    <InputGroup id='display-name' value={name} onValueChange={setName} required />
                 </FormGroup>
                 <FormGroup
                     label='Server address'
                     labelFor='server-address'
                     labelInfo='*'
                 >
-                    <InputGroup id='server-address' value={serverAddress} onValueChange={setServerAddress} />
+                    <InputGroup id='server-address' value={serverAddress} onValueChange={setServerAddress} required />
                 </FormGroup>
                 <FormGroup
                     label='Health port'
@@ -67,7 +72,25 @@ export const AddServerDialog = ({ isOpen, onAddServer, onClose }: AddServerDialo
                     labelFor='health-port'
                     labelInfo='*'
                 >
-                    <NumericInput value={healthPort} onValueChange={setHealthPort} min={1} max={65535} />
+                    <NumericInput id='health-port' value={healthPort} onValueChange={setHealthPort} min={1} max={65535} required />
+                </FormGroup>
+                <ControlGroup>
+                    <FormGroup
+                        label='Poll frequency'
+                        labelFor='poll-frequency'
+                        labelInfo='*'
+                    >
+                        <NumericInput id='poll-frequency' value={pollFrequency} onValueChange={setPollFrequency} min={1} max={3600} required />
+                    </FormGroup>
+                    <span className={styles.inputPostText}>seconds</span>
+                </ControlGroup>
+                <FormGroup
+                    label='Cached items'
+                    helperText='The number of previous statuses to display'
+                    labelFor='cache-size'
+                    labelInfo='*'
+                >
+                    <NumericInput id='cache-size' value={cacheSize} onValueChange={setCacheSize} min={1} max={1000} required />
                 </FormGroup>
             </DialogBody>
             <DialogFooter actions={<Actions />} />

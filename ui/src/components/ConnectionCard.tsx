@@ -15,11 +15,13 @@ type ConnectionCardProps = {
     title?: string,
     address: string,
     healthPort: number,
+    cacheSize: number,
+    pollFrequencyInSeconds: number,
 
     onRemove?: () => void,
 };
 
-export const ConnectionCard = ({ title, address, healthPort, onRemove }: ConnectionCardProps) => {
+export const ConnectionCard = ({ title, address, healthPort, onRemove, ...graphProps }: ConnectionCardProps) => {
 
     const [health, setHealth] = useState<Health>(DEFAULT_HEALTH);
 
@@ -39,7 +41,7 @@ export const ConnectionCard = ({ title, address, healthPort, onRemove }: Connect
             <h4>
                 {title || address}
             </h4>
-            <HealthGraph healthUrl={healthUri} cacheSize={300} onReceiveHealth={setHealth} />
+            <HealthGraph healthUrl={healthUri} {...graphProps} onReceiveHealth={setHealth} />
         </Card>
     );
 }

@@ -57,13 +57,15 @@ export const DEFAULT_HEALTH: Health = {
 
 type HealthGraphProps = {
     healthUrl: string,
+    pollFrequencyInSeconds: number,
     cacheSize: number,
     onReceiveHealth?: (health: Health) => void,
 };
 
-export const HealthGraph = ({ healthUrl, cacheSize, onReceiveHealth }: HealthGraphProps) => {
+export const HealthGraph = ({ healthUrl, cacheSize, pollFrequencyInSeconds, onReceiveHealth }: HealthGraphProps) => {
     const tick = useTick();
     const [health, setHealth] = useState<Health[]>(Array.apply(null, Array(cacheSize)).map(() => DEFAULT_HEALTH));
+    const startTick = useMemo(() => tick, []);
 
     const addHealthState = useMemo(() => (health: Health) =>
         setHealth(current => {
@@ -74,17 +76,19 @@ export const HealthGraph = ({ healthUrl, cacheSize, onReceiveHealth }: HealthGra
     [onReceiveHealth, setHealth]);
 
     useEffect(() => {
-        const abortController = new AbortController();
-        const timeout = setTimeout(() => abortController.abort(), 900);
-
-        fetch(healthUrl, { signal: abortController.signal }).then(response =>
-            response.json().then(addHealthState)
-        ).catch(() =>
-            addHealthState({ ...DEFAULT_HEALTH, overall: HealthState.Critical })
-        ).finally(() =>
-            clearTimeout(timeout)
-        );
-    }, [tick, addHealthState]);
+        if((startTick - tick) % pollFrequencyInSeconds === 0) {
+            const abortController = new AbortController();
+            const timeout = setTimeout(() => abortController.abort(), 900);
+    
+            fetch(healthUrl, { signal: abortController.signal }).then(response =>
+                response.json().then(addHealthState)
+            ).catch(() =>
+                addHealthState({ ...DEFAULT_HEALTH, overall: HealthState.Critical })
+            ).finally(() =>
+                clearTimeout(timeout)
+            );
+        }
+    }, [tick, startTick, addHealthState]);
 
     const normalizedData = useMemo(() => health.map((item, index) => ({
         index,

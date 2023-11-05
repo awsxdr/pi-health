@@ -50,7 +50,9 @@ export const DashboardPage = () => {
                         <ConnectionCard 
                             title={connection.displayName} 
                             address={connection.serverAddress} 
-                            healthPort={connection.healthPort} 
+                            healthPort={connection.healthPort}
+                            cacheSize={connection.cacheSize}
+                            pollFrequencyInSeconds={connection.pollFrequencyInSeconds}
                             onRemove={() => handleRemoveConnection(connection)}
                         />
                     ))
